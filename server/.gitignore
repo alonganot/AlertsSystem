@@ -1,0 +1,32 @@
+# Node.js
+node_modules/
+dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment files
+.env
+.env.*.local
+
+# Build
+build/
+.tmp/
+.cache/
+.nyc_output/
+coverage/
+
+# Nest CLI output
+debug.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+
+# Generated schema
+src/schema.gql
