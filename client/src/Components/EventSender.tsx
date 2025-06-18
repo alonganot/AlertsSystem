@@ -38,7 +38,7 @@ export const EventSender: FC = () => {
     };
 
     return (
-       <div style={{ display: "flex", flexDirection: "row-reverse", gap: "2rem", alignItems: "center" }}>
+       <div style={{ display: "flex", flexDirection: "row-reverse", gap: "2rem", alignItems: "center", position: "absolute", right: "35%", top: "40%" }}>
             <h2>:בחר אירוע</h2>
             <div>
                 <button
