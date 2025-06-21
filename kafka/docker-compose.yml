@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.3.0
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  kafka:
+    image: confluentinc/cp-kafka:7.3.0
+    container_name: kafka
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false" # We'll create topics manually
+    healthcheck:
+      test: ["CMD", "kafka-topics", "--bootstrap-server", "localhost:9092", "--list"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+
+  kafka-init:
+    image: confluentinc/cp-kafka:7.3.0
+    container_name: kafka-init
+    depends_on:
+      kafka:
+        condition: service_healthy
+    entrypoint: [ "/bin/sh", "-c" ]
+    command: >
+      "
+      echo '⏳ Waiting for Kafka to be ready...';
+      kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic test --partitions 1 --replication-factor 1;
+      echo '✅ Topic created: test';
+      "
+    restart: "no"
+
+
+# the kafka-init script is not working for some reason so in order to create topics run:
+# docker exec -it kafka kafka-topics \
+# --bootstrap-server kafka:9092 \
+# --create --if-not-exists \
+# --topic test --partitions 1 --replication-factor 1
+
+
+# to check if the the topic created run:
+# docker exec -it kafka kafka-topics --bootstrap-server kafka:9092 --list
