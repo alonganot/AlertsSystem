@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { LineEvent } from "./types";
+import { DeletedLineEvent, UpdatedLineEvent } from "./types";
 import { ProducerService } from "src/producer/producer.service";
 import { appConfig } from "src/appConfig";
 
@@ -7,11 +7,11 @@ import { appConfig } from "src/appConfig";
 export class EventsService {
     constructor(private readonly producerService: ProducerService) {}
 
-    async updateLine (line: LineEvent) {
+    async updateLine (line: UpdatedLineEvent) {
         this.producerService.sendMessage(appConfig.KAFKA_TOPICS, line)
     }
 
-    async deleteLine (line: LineEvent) {
+    async deleteLine (line: DeletedLineEvent) {
         this.producerService.sendMessage(appConfig.KAFKA_TOPICS, line)
     }
 }

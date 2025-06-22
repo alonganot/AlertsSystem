@@ -6,6 +6,7 @@ import {
   OnGatewayDisconnect,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { LineEvent } from 'src/types';
 
 @WebSocketGateway({
    cors: true

@@ -3,3 +3,11 @@ export interface LineEvent {
     status: 'DELETED' | 'CURRENT' | 'EXPIRED'
     userId: string
 }
+
+export interface DeletedLineEvent extends LineEvent {
+    status: 'DELETED'
+}
+
+export interface UpdatedLineEvent extends LineEvent {
+    status: 'CURRENT' | 'EXPIRED'
+}
