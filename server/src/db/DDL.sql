@@ -9,7 +9,7 @@ CREATE TABLE user_preference.notifications (
 
 -- Create user_notifications table for many-to-many relationship
 CREATE TABLE user_preference.user_notifications (
-    user_id INTEGER NOT NULL,
+    user_id VARCHAR(255) NOT NULL,
     notification_id INTEGER NOT NULL,
     PRIMARY KEY (user_id, notification_id),
     FOREIGN KEY (notification_id) REFERENCES user_preference.notifications(id) ON DELETE CASCADE
