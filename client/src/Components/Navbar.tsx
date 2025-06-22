@@ -26,7 +26,7 @@ const Navbar: React.FC = () => {
         style={{ position: "relative", cursor: "pointer" }}
         onClick={() => setOpen(!open)}
       >
-        <img width={30} src={`../../../public/bell${notifications.length > 0? 'alert' : 'silent'}.png`}></img>
+        <img width={30} src={`bell${notifications.length > 0? 'alert' : 'silent'}.png`} />
         {notifications.length > 0 && (
           <span
             style={{
