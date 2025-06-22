@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Post, Query, Req } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Delete, Get, Post, Query, Req } from "@nestjs/common";
 import { NotificationsService } from "./notifications.service";
 
 @Controller("notifications")
@@ -11,28 +11,33 @@ export class NotificationsController {
   }
 
   @Get()
-  async getAllNotifications() {
-    return this.notificationsService.getAllNotifications();
+  async getAllNotifications(
+    @Query('user_id') userId: string,
+  ) {
+    if (!userId) {
+      throw new BadRequestException("No user_id provided")
+    }
+    return this.notificationsService.getAllNotifications(userId);
   }
 
   @Post('user-notification')
   async addUserNotification(
-    @Body() body: { user_id: number; notification_id: number },
+    @Body() body: { userId: string; notificationId: number },
   ) {
     return this.notificationsService.addUserNotification(
-      body.user_id,
-      body.notification_id,
+      body.userId,
+      body.notificationId,
     );
   }
 
   @Delete('user-notification')
   async removeUserNotification(
-    @Query('user_id') user_id: string,
-    @Query('notification_id') notification_id: string,
+    @Query('user_id') userId: string,
+    @Query('notification_id') notificationId: string,
   ) {
     return this.notificationsService.removeUserNotification(
-      Number(user_id),
-      Number(notification_id),
+      userId,
+      Number(notificationId),
     );
   }
 }

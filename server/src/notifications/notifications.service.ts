@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { executeQuery } from "src/db/dbConnection";
-import { KafkaProducer } from "src/kafka/kafka.producer";
-import { Notification, UserNotification } from "./types";
+import { NotificationWithUserFlag, UserNotification } from "./types";
+// import { KafkaProducer } from "src/kafka/kafka.producer";
 
 @Injectable()
 export class NotificationsService {
@@ -13,42 +13,48 @@ export class NotificationsService {
     //return this.kafkaService.send("gf", {});
   }
 
-  async getAllNotifications(): Promise<Notification[]> {
-    executeQuery<Notification>('BEGIN');
-    const response = executeQuery<Notification>('SELECT id, description FROM user_preference.notifications')
-    executeQuery<Notification>('COMMIT');
-    return response
+  async getAllNotifications(userId: string) {
+    return executeQuery<NotificationWithUserFlag[]>(`
+      SELECT 
+        notification.id, 
+        notification.description,
+        (un.notification_id IS NOT NULL) AS "hasNotification"
+      FROM user_preference.notifications notification
+      LEFT JOIN user_preference.user_notifications un 
+        ON notification.id = un.notification_id AND un.user_id = $1
+      ORDER BY notification.id
+    `, [userId]);
   }
 
   async addUserNotification(
-    user_id: number,
-    notification_id: number,
+    userId: string,
+    notificationId: number,
   ): Promise<UserNotification[]> {
     await executeQuery(
       'INSERT INTO user_notifications (user_id, notification_id) VALUES ($1, $2)',
-      [user_id, notification_id],
+      [userId, notificationId],
     );
 
     // return all user_notifications for this user, optional
     return executeQuery<UserNotification>(
       'SELECT user_id, notification_id FROM user_notifications WHERE user_id = $1',
-      [user_id],
+      [userId],
     );
   }
 
   async removeUserNotification(
-    user_id: number,
-    notification_id: number,
+    userId: string,
+    notificationId: number,
   ): Promise<UserNotification[]> {
     await executeQuery(
       'DELETE FROM user_notifications WHERE user_id = $1 AND notification_id = $2',
-      [user_id, notification_id],
+      [userId, notificationId],
     );
 
     // return all user_notifications for this user, optional
     return executeQuery<UserNotification>(
       'SELECT user_id, notification_id FROM user_notifications WHERE user_id = $1',
-      [user_id],
+      [userId],
     );
   }
 }
