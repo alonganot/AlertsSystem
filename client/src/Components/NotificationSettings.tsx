@@ -1,5 +1,5 @@
 import { useEffect, useState, type FC } from 'react';
-import { getAllNotificationsByUserId, subscribeToNotification, unsubscribeToNotification } from '../api/Notificitions';
+import { getAllNotificationsByUserId, subscribeToNotification, unsubscribeToNotification } from '../api/NotificitionsSubscriber';
 
 export type Notification = {
   id: number;
@@ -7,14 +7,14 @@ export type Notification = {
   hasNotification: boolean;
 };
 
-const currentUser = localStorage.getItem('user') || 'tova';
+const currentUser = localStorage.getItem('user');
 
 export const NotificationSettings: FC = () => {
   const [isOpen, setIsOpen] = useState(false); 
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
   useEffect(() => {
-    const getNotifications = async () => setNotifications(await getAllNotificationsByUserId(currentUser));
+    const getNotifications = async () => setNotifications(await getAllNotificationsByUserId(currentUser!));
 
     getNotifications();
   }, []);
@@ -27,10 +27,10 @@ export const NotificationSettings: FC = () => {
       ); 
 
      if (!hasNotification) {
-        subscribeToNotification(currentUser, id);
+        subscribeToNotification(currentUser!, id);
      } else {
       console.log("here")
-        unsubscribeToNotification(currentUser, id);
+        unsubscribeToNotification(currentUser!, id);
      }
   };
 
