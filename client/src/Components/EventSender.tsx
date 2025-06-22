@@ -1,12 +1,9 @@
 import { useEffect, useState, type FC } from "react";
-import { useNotifications } from "../context/NotificationsContext";
-
-const BACKEND_URL = 'localhost:3000';
+import { appConfig } from "../appConfig";
 
 const events = ["קו נכנס לתוקף", "קו יצא מתוקף", "קו נמחק"];
 
 export const EventSender: FC = () => {
-    const { addNotification } = useNotifications()
     const [selectedEvent, setSelectedEvent] = useState<string>(events[0]);    
 
     useEffect(() => {
@@ -14,39 +11,32 @@ export const EventSender: FC = () => {
             Notification.requestPermission();
         }
     }, []);
-
-    const sendNotification = () => {
-        const date = new Intl.DateTimeFormat('en-GB', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: false,
-        }).format(new Date())
-
-        addNotification({ message: selectedEvent, date })
-        if (Notification.permission === "granted") {
-            new Notification(selectedEvent, {
-                icon: "/map-icon.png", 
-            });
-        }
-    };
     
     const sendEvent = async () => {
-        sendNotification();
+        const status = selectedEvent === 'קו נכנס לתוקף' ? 'CURRENT' : selectedEvent === 'קו יצא מתוקף' ? "EXPIRED" : "DELETED" // This should be smarter
 
         try {
-            await fetch(`${BACKEND_URL}/notifications/subscribe`, {
+            await fetch(`${appConfig.SERVER_URL}/event/update`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ selectedEvent }),
+                body: JSON.stringify({ id: 'L123', status, userId: localStorage.getItem("user") }),
             });
         } catch (error: any) {
             console.log(`Error: ${error.message}`);
         }
+        // try {
+        //     await fetch(`${appConfig.SERVER_URL}/notifications/subscribe`, {
+        //         method: "POST",
+        //         headers: {
+        //             "Content-Type": "application/json",
+        //         },
+        //         body: JSON.stringify({ selectedEvent }),
+        //     });
+        // } catch (error: any) {
+        //     console.log(`Error: ${error.message}`);
+        // }
     };
 
     return (
