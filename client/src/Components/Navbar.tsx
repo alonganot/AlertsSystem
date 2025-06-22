@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNotifications } from "../context/NotificationsContext";
+import { NotificationSettings } from "./NotificationSettings";
 
 const Navbar: React.FC = () => {
   const { notifications, removeNotification } = useNotifications();
@@ -12,48 +13,59 @@ const Navbar: React.FC = () => {
         top: 0,
         left: 0,
         width: "100%",
-        background: "linear-gradient(to right,rgb(48, 144, 161),rgb(15, 96, 110),rgb(9, 19, 54))",
+        background: "linear-gradient(to right, rgb(48, 144, 161), rgb(15, 96, 110), rgb(9, 19, 54))",
         color: "white",
         padding: "0.75rem 1rem",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
         boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-        zIndex: 1000
-    }}
+        zIndex: 1000,
+        direction: "rtl", // for proper RTL rendering of Hebrew
+      }}
     >
-      <div
-        style={{ position: "relative", cursor: "pointer" }}
-        onClick={() => setOpen(!open)}
-      >
-        <img width={30} src={`bell${notifications.length > 0? 'alert' : 'silent'}.png`} />
-        {notifications.length > 0 && (
-          <span
-            style={{
-              position: "absolute",
-              top: "-4px",
-              right: "-8px",
-              backgroundColor: "rgb(9, 19, 54)",
-              color: "white",
-              borderRadius: "50%",
-              width: "20px",
-              height: "20px",
-              fontSize: "0.75rem",
-              fontWeight: "bold",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            {notifications.length}
-          </span>
-        )}
-      </div>
-       <h1 style={{ fontSize: "1.25rem", fontWeight: "bold", textAlign: "right", marginRight: "50px" }}>
+      {/* Right side (Hebrew title) */}
+      <h1 style={{ fontSize: "1.25rem", fontWeight: "bold", margin: 0 }}>
         מודל התראות
-       </h1>
+      </h1>
 
-      {/* Floating list */}
+      {/* Left side (settings + bell) */}
+      <div style={{ display: "flex", alignItems: "center", gap: "1rem", direction: "ltr" }}>
+        {/* Settings */}
+        <NotificationSettings />
+
+        {/* Bell icon */}
+        <div style={{ position: "relative", cursor: "pointer" }} onClick={() => setOpen(!open)}>
+          <img
+            width={30}
+            src={`bell${notifications.length > 0 ? "alert" : "silent"}.png`}
+            alt="Bell"
+          />
+          {notifications.length > 0 && (
+            <span
+              style={{
+                position: "absolute",
+                top: "-4px",
+                right: "-8px",
+                backgroundColor: "rgb(9, 19, 54)",
+                color: "white",
+                borderRadius: "50%",
+                width: "20px",
+                height: "20px",
+                fontSize: "0.75rem",
+                fontWeight: "bold",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              {notifications.length}
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Notification dropdown */}
       {open && notifications.length > 0 && (
         <div
           style={{
@@ -81,7 +93,15 @@ const Navbar: React.FC = () => {
           >
             התראות
           </h2>
-          <ul style={{ listStyle: "none", padding: 0, margin: 0, maxHeight: "16rem", overflowY: "auto" }}>
+          <ul
+            style={{
+              listStyle: "none",
+              padding: 0,
+              margin: 0,
+              maxHeight: "16rem",
+              overflowY: "auto",
+            }}
+          >
             {notifications.map((notification, index) => (
               <li
                 key={index}
@@ -93,8 +113,8 @@ const Navbar: React.FC = () => {
                   cursor: "pointer",
                 }}
                 title="Click to dismiss"
-                onMouseEnter={e => (e.currentTarget.style.backgroundColor = "#dbeafe")}
-                onMouseLeave={e => (e.currentTarget.style.backgroundColor = "#eff6ff")}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#dbeafe")}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#eff6ff")}
                 onClick={() => removeNotification(index)}
               >
                 <div style={{ fontSize: "0.875rem" }}>{notification.message}</div>
