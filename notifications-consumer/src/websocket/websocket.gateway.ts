@@ -26,11 +26,10 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
         if (!clientId) {
             console.warn('Client connected without ID')
             client.disconnect(true)
-            return
+        } else {
+            this.clients.set(clientId as string, client)
+            console.log(`client connected with id: ${clientId}`)
         }
-
-        this.clients.set(clientId as string, client)
-        console.log(`client connected with id: ${clientId}`);
         
     }
 
