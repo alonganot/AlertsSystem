@@ -3,9 +3,6 @@ import { GraphQLModule } from "@nestjs/graphql";
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 import { join } from "path";
 
-import { AppController } from "./app.controller";
-import { AppService } from "./app.service";
-import { AppResolver } from "./app.resolver";
 import { NotificationsModule } from "./notifications/notifications.module";
 
 @Module({
@@ -15,8 +12,6 @@ import { NotificationsModule } from "./notifications/notifications.module";
       autoSchemaFile: join(process.cwd(), "src/schema.gql"),
     }),
     NotificationsModule,
-  ],
-  controllers: [AppController],
-  providers: [AppService, AppResolver],
+  ]
 })
 export class AppModule {}
