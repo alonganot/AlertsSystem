@@ -15,7 +15,7 @@ import { NotificationsService } from "./notifications.service";
   ],
   controllers: [NotificationsController],
   providers: [
-    // KafkaProducer ,
+     // KafkaProducer ,
      NotificationsService],
 })
 export class NotificationsModule {}
