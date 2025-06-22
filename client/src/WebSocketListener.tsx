@@ -29,7 +29,7 @@ const WebSocketListener: React.FC = () => {
         if (!localStorage.getItem("user")) {
             localStorage.setItem("user", "defaultuser")
         }
-        const socket: Socket = io(`${appConfig.WS_SERVER_URL}${localStorage.getItem("user")}`, {
+        const socket: Socket = io(`${appConfig.WS_SERVER_URL}?clientId=${localStorage.getItem("user")}`, {
         transports: ["websocket"],
         });
 
@@ -37,6 +37,7 @@ const WebSocketListener: React.FC = () => {
         console.log("[Socket.IO] Connected");
         });
 
+        //TODO: listen only to messages that you care about (fetch from db)
         socket.on("kafka-message", (data: string) => {
             try {
                 sendNotification(data);

@@ -1,5 +1,5 @@
 import { useEffect, useState, type FC } from 'react';
-import { getAllNotificationsByUserId, subscribeToNotification, unsubscribeToNotification } from '../api/NotificitionsSubscriber';
+import { getAllNotificationsByUserId, subscribeToNotification, unsubscribeToNotification } from '../api/Notificitions';
 
 export type Notification = {
   id: number;
@@ -29,7 +29,6 @@ export const NotificationSettings: FC = () => {
      if (!hasNotification) {
         subscribeToNotification(currentUser!, id);
      } else {
-      console.log("here")
         unsubscribeToNotification(currentUser!, id);
      }
   };

@@ -8,8 +8,9 @@ function App() {
     <NotificationsProvider>
       <WebSocketListener />
       <Navbar />
-      <div style={{ paddingTop: '3.5rem' }}>
+      <div style={{ paddingTop: '3.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100vw', userSelect: 'none' }}>
         <EventSender />
+        <img src='smart.png' width={600} style={{ marginTop: '50px' }}/>
       </div>
     </NotificationsProvider>
   )
