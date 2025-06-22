@@ -1,11 +1,13 @@
 import { useEffect, useState, type FC } from "react";
+import { useNotifications } from "../context/NotificationsContext";
 
 const BACKEND_URL = 'localhost:3000';
 
 const events = ["קו נכנס לתוקף", "קו יצא מתוקף", "קו נמחק"];
 
 export const EventSender: FC = () => {
-    const [selectedEvent, setSelectedEvent] = useState<string>('');    
+    const { addNotification } = useNotifications()
+    const [selectedEvent, setSelectedEvent] = useState<string>(events[0]);    
 
     useEffect(() => {
         if ("Notification" in window && Notification.permission !== "granted") {
@@ -14,6 +16,16 @@ export const EventSender: FC = () => {
     }, []);
 
     const sendNotification = () => {
+        const date = new Intl.DateTimeFormat('en-GB', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false,
+        }).format(new Date())
+
+        addNotification({ message: selectedEvent, date })
         if (Notification.permission === "granted") {
             new Notification(selectedEvent, {
                 icon: "/map-icon.png", 
