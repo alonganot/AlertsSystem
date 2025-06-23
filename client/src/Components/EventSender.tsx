@@ -1,7 +1,7 @@
 import { useEffect, useState, type FC } from "react";
 import { sendEvent } from "../api/Events";
-import { locations } from "./UserData";
 import styled from "styled-components";
+import { pikuds } from "../consts";
 
 const events = ["קו נכנס לתוקף", "קו יצא מתוקף", "קו נמחק"];
 
@@ -20,7 +20,7 @@ const EventSelecter = styled('select')({
 
 export const EventSender: FC = () => {
     const [selectedEvent, setSelectedEvent] = useState<string>(events[0]);    
-    const [selectedPikud, setSelectedPikud] = useState<string>(locations[0]);    
+    const [selectedPikud, setSelectedPikud] = useState<string>(pikuds[0]);    
 
     useEffect(() => {
         if ("Notification" in window && Notification.permission !== "granted") {
@@ -53,9 +53,9 @@ export const EventSender: FC = () => {
                     onChange={(e) => setSelectedPikud(e.target.value)}
                     dir="rtl"
                 >
-                    {locations.map((loc) => (
-                        <option key={loc} value={loc}>
-                            {loc}
+                    {pikuds.map((pikud) => (
+                        <option key={pikud} value={pikud}>
+                            {pikud}
                         </option>
                     ))}
                 </EventSelecter> 

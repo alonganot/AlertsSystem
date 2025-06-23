@@ -1,5 +1,6 @@
 import { useState, useEffect, type FC } from "react";
 import styled from "styled-components";
+import { pikuds } from "../consts";
 
 const Popup = styled('div')({
   position: "absolute",
@@ -14,27 +15,24 @@ const Popup = styled('div')({
   zIndex: 10,
 });
 
-export const locations = ["פיקוד צפון", "פיקוד דרום"];
+type User = {
+  user: string;
+  pikud: string;
+};
 
 const UserData: FC = () => {
-  const [user, setUser] = useState<string>("");
-  const [pikud, setPikud] = useState<string>("");
+  const [userData, setUserData] = useState<User>();
   const [showPopup, setShowPopup] = useState<boolean>(false);
 
-  
-
-   useEffect(() => {
+  useEffect(() => {
     const savedUserData = localStorage.getItem("userData");
 
     if (savedUserData) {
-      const { user, pikud } = JSON.parse(savedUserData);
-      setUser(user || "");
-      setPikud(pikud || "");
+      setUserData(JSON.parse(savedUserData));
     }
   }, []);
 
   const handleSubmit = () => {
-    const userData = { user, pikud };
     localStorage.setItem("userData", JSON.stringify(userData));
 
     setShowPopup(false);
@@ -56,8 +54,13 @@ const UserData: FC = () => {
                 <input
                   type="text"
                   id="username"
-                  value={user}
-                  onChange={(e) => setUser(e.target.value)}
+                  value={userData?.user}
+                  onChange={(e) => setUserData((prevUser) => {
+                      if (prevUser) {
+                        return { ...prevUser, user: e.target.value };
+                      }
+                      return { user: e.target.value, pikud: "" };
+                    })}
                   required
                 />
               </div>
@@ -66,13 +69,19 @@ const UserData: FC = () => {
                 <label htmlFor="location">פיקוד </label>
                 <select
                   id="location"
-                  value={pikud}
-                  onChange={(e) => setPikud(e.target.value)}
+                  value={userData?.pikud}
+                  onChange={(e) => setUserData((prevUser) => {
+                      if (prevUser) {
+                        return { ...prevUser, pikud: e.target.value };
+                      }
+                      return { user: "", pikud: e.target.value }; // Initialize if `prevUser` is undefined
+                    })
+                  }
                   required
                 >
-                  {locations.map((loc) => (
-                    <option key={loc} value={loc}>
-                      {loc}
+                  {pikuds.map((pikud) => (
+                    <option key={pikud} value={pikud}>
+                      {pikud}
                     </option>
                   ))}
                 </select>

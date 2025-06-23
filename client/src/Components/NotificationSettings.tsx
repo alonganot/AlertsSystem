@@ -37,8 +37,9 @@ export const NotificationSettings: FC = () => {
   const [user, setUser] = useState<string>(getUser() || '');
 
   useEffect(() => {
-    const getNotifications = async () => {setUser(getUser() || ''); setNotifications(await getAllNotificationsByUserId(getUser() || ''))};
+    const getNotifications = async () => setNotifications(await getAllNotificationsByUserId(getUser() || ''));
 
+    setUser(getUser() || '');
     getNotifications();
   }, [isOpen]);
 
