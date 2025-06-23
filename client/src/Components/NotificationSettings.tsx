@@ -34,12 +34,10 @@ const getUser = () => {const { user } = JSON.parse(localStorage.getItem('userDat
 export const NotificationSettings: FC = () => {
   const [isOpen, setIsOpen] = useState(false); 
   const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [user, setUser] = useState<string>(getUser() || '');
 
   useEffect(() => {
     const getNotifications = async () => setNotifications(await getAllNotificationsByUserId(getUser() || ''));
 
-    setUser(getUser() || '');
     getNotifications();
   }, [isOpen]);
 
@@ -51,9 +49,9 @@ export const NotificationSettings: FC = () => {
       ); 
 
      if (!hasNotification) {
-        subscribeToNotification(user!, id);
+        subscribeToNotification(getUser(), id);
      } else {
-        unsubscribeToNotification(user!, id);
+        unsubscribeToNotification(getUser(), id);
      }
   };
 
