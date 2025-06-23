@@ -1,5 +1,6 @@
 import { NotificationSettings } from "./NotificationSettings";
 import { NotificationDropdown } from "./NotificationsDropdown";
+import UserData from "./UserData";
 
 const Navbar: React.FC = () => {
   return (
@@ -28,6 +29,7 @@ const Navbar: React.FC = () => {
       <div style={{ display: "flex", alignItems: "center", gap: "1rem", direction: "ltr" }}>
         <NotificationSettings />
         <NotificationDropdown />
+        <UserData/>
       </div>
     </nav>
   );
