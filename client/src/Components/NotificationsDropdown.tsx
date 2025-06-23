@@ -61,11 +61,12 @@ const NotificationDropdown: React.FC = () => {
   const [open, setOpen] = useState(false);
 
   return (
-    <div style={{ position: "relative", cursor: "pointer" }} onClick={() => setOpen(!open)}>
+    <div style={{ position: "relative", cursor: "pointer" }}>
         <img
             width={30}
             src={`bell${notifications.length > 0 ? "alert" : "silent"}.png`}
             alt="Bell"
+            onClick={() => setOpen(!open)}
         />
         { notifications.length > 0 && 
         <>
