@@ -1,8 +1,22 @@
 import { useEffect, useState, type FC } from "react";
 import { sendEvent } from "../api/Events";
 import { locations } from "./UserData";
+import styled from "styled-components";
 
 const events = ["קו נכנס לתוקף", "קו יצא מתוקף", "קו נמחק"];
+
+const EventButton = styled('button')({
+    padding: "0.5rem",
+    fontSize: "1rem",
+    height: "2.5rem"
+});
+
+const EventSelecter = styled('select')({
+    padding: "0.5rem",
+    flex: 1,
+    fontSize: "1rem",
+    height: "2.5rem"
+});
 
 export const EventSender: FC = () => {
     const [selectedEvent, setSelectedEvent] = useState<string>(events[0]);    
@@ -18,25 +32,14 @@ export const EventSender: FC = () => {
        <div style={{ display: "flex", flexDirection: "row-reverse", gap: "2rem", alignItems: "center" }}>
             <h2>:בחר אירוע</h2>
             <div>
-                <button
+                <EventButton
                     onClick={() => sendEvent(selectedEvent)}
-                    style={{
-                        padding: "0.5rem 1rem",
-                        height: "2.5rem",
-                        fontSize: "1rem"
-                    }}
                 >
                     שלח אירוע
-                </button>
-                <select
+                </EventButton>
+                <EventSelecter
                     value={selectedEvent}
                     onChange={(e) => setSelectedEvent(e.target.value)}
-                    style={{
-                        padding: "0.5rem",
-                        flex: 1,
-                        fontSize: "1rem",
-                        height: "2.5rem"
-                    }}
                     dir="rtl"
                 >
                     {events.map((event) => (
@@ -44,16 +47,10 @@ export const EventSender: FC = () => {
                             {event}
                         </option>
                     ))}
-                </select> 
-                <select
+                </EventSelecter> 
+                <EventSelecter
                     value={selectedPikud}
                     onChange={(e) => setSelectedPikud(e.target.value)}
-                    style={{
-                        padding: "0.5rem",
-                        flex: 1,
-                        fontSize: "1rem",
-                        height: "2.5rem"
-                    }}
                     dir="rtl"
                 >
                     {locations.map((loc) => (
@@ -61,7 +58,7 @@ export const EventSender: FC = () => {
                             {loc}
                         </option>
                     ))}
-                </select> 
+                </EventSelecter> 
             </div>
         </div>
     );
