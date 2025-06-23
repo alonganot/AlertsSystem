@@ -3,6 +3,7 @@ import { appConfig } from "../appConfig";
 export const sendEvent = async (event: string) => {
         const status = event === 'קו נכנס לתוקף' ? 'CURRENT' : event === 'קו יצא מתוקף' ? "EXPIRED" : "DELETED" // This should be smarter
 
+        //TODO: add pikud
         try {
             await fetch(`${appConfig.SERVER_URL}/event/update`, {
                 method: "POST",

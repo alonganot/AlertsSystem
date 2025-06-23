@@ -34,7 +34,7 @@ export const NotificationSettings: FC = () => {
 
   return (
    <>
-      <img src="settings.png" width={30} onClick={() => setIsOpen((prev) => !prev)}></img>
+      <img src="settings.png" width={30} onClick={() => setIsOpen((prev) => !prev)} style={{cursor: 'pointer'}}></img>
 
       {isOpen && <div style={{
             position: "absolute",

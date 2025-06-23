@@ -1,6 +1,7 @@
 import { useState, useEffect, type FC } from "react";
+import styled from "styled-components";
 
-const popupStyles: React.CSSProperties = {
+const Popup = styled('div')({
   position: "fixed",
   top: 0,
   left: 0,
@@ -11,21 +12,24 @@ const popupStyles: React.CSSProperties = {
   justifyContent: "center",
   alignItems: "center",
   color: 'black',
-};
+});
 
-const popupContentStyles: React.CSSProperties = {
+const PopupContent = styled('div')({
   backgroundColor: "#fff",
   padding: "20px",
   borderRadius: "5px",
   width: "300px",
-  textAlign: "center",
-};
+  textAlign: "center"
+});
+
+export const locations = ["פיקוד צפון", "פיקוד דרום"];
+
 const UserData: FC = () => {
   const [user, setUser] = useState<string>("");
   const [pikud, setPikud] = useState<string>("");
   const [showPopup, setShowPopup] = useState<boolean>(false);
 
-  const locations = ["צפון", "דרום"];
+  
 
   useEffect(() => {
     setUser(localStorage.getItem("user") || '');
@@ -43,11 +47,11 @@ const UserData: FC = () => {
 
   return (
     <div dir="rtl">
-      <img width={30} src={`account.png`} alt="Account" onClick={togglePopup}/>
+      <img width={30} src={`account.png`} alt="Account" onClick={togglePopup} style={{cursor: 'pointer'}}/>
 
       {showPopup && (
-        <div style={popupStyles}>
-          <div style={popupContentStyles}>
+        <Popup>
+          <PopupContent>
             <h2>פרטי משתמש</h2>
             <form onSubmit={handleSubmit}>
               <div>
@@ -80,8 +84,8 @@ const UserData: FC = () => {
               <button type="submit">שמור</button>
             </form>
             <button onClick={togglePopup}>סגור</button>
-          </div>
-        </div>
+          </PopupContent>
+        </Popup>
       )}
     </div>
   );
