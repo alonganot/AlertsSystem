@@ -2,24 +2,16 @@ import { useState, useEffect, type FC } from "react";
 import styled from "styled-components";
 
 const Popup = styled('div')({
-  position: "fixed",
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  backgroundColor: "rgba(0, 0, 0, 0.5)",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  color: 'black',
-});
-
-const PopupContent = styled('div')({
-  backgroundColor: "#fff",
-  padding: "20px",
-  borderRadius: "5px",
-  width: "300px",
-  textAlign: "center"
+  position: "absolute",
+  left: "1rem",
+  top: "3.5rem",
+  background: "white",
+  color: "black",
+  width: "16rem",
+  borderRadius: "0.5rem",
+  boxShadow: "0 2px 10px rgba(0,0,0,0.15)",
+  padding: "0.5rem",
+  zIndex: 10,
 });
 
 export const locations = ["פיקוד צפון", "פיקוד דרום"];
@@ -31,15 +23,20 @@ const UserData: FC = () => {
 
   
 
-  useEffect(() => {
-    setUser(localStorage.getItem("user") || '');
-    setPikud(localStorage.getItem("pikud") || '');
+   useEffect(() => {
+    const savedUserData = localStorage.getItem("userData");
+
+    if (savedUserData) {
+      const { user, pikud } = JSON.parse(savedUserData);
+      setUser(user || "");
+      setPikud(pikud || "");
+    }
   }, []);
 
-  const handleSubmit = () => {  
-    localStorage.setItem("user", user);
-    localStorage.setItem("pikud", pikud);
-    
+  const handleSubmit = () => {
+    const userData = { user, pikud };
+    localStorage.setItem("userData", JSON.stringify(userData));
+
     setShowPopup(false);
   };
 
@@ -51,11 +48,11 @@ const UserData: FC = () => {
 
       {showPopup && (
         <Popup>
-          <PopupContent>
+          <div>
             <h2>פרטי משתמש</h2>
             <form onSubmit={handleSubmit}>
               <div>
-                <label htmlFor="username">שם משתמש </label>
+                <label htmlFor="username">שם משתמש: </label>
                 <input
                   type="text"
                   id="username"
@@ -84,7 +81,7 @@ const UserData: FC = () => {
               <button type="submit">שמור</button>
             </form>
             <button onClick={togglePopup}>סגור</button>
-          </PopupContent>
+          </div>
         </Popup>
       )}
     </div>

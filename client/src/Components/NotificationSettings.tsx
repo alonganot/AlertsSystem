@@ -7,13 +7,15 @@ export type Notification = {
   hasNotification: boolean;
 };
 
+const getUser = () => {const { user } = JSON.parse(localStorage.getItem('userData')!); return user};
+
 export const NotificationSettings: FC = () => {
   const [isOpen, setIsOpen] = useState(false); 
   const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [user, setUser] = useState<string>(localStorage.getItem('user') || '');
+  const [user, setUser] = useState<string>(getUser() || '');
 
   useEffect(() => {
-    const getNotifications = async () => {setUser(localStorage.getItem('user') || ''); setNotifications(await getAllNotificationsByUserId(localStorage.getItem('user') || ''))};
+    const getNotifications = async () => {setUser(getUser() || ''); setNotifications(await getAllNotificationsByUserId(getUser() || ''))};
 
     getNotifications();
   }, [isOpen]);
