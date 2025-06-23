@@ -7,17 +7,16 @@ export type Notification = {
   hasNotification: boolean;
 };
 
-const currentUser = localStorage.getItem('user');
-
 export const NotificationSettings: FC = () => {
   const [isOpen, setIsOpen] = useState(false); 
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [user, setUser] = useState<string>(localStorage.getItem('user') || '');
 
   useEffect(() => {
-    const getNotifications = async () => setNotifications(await getAllNotificationsByUserId(currentUser!));
+    const getNotifications = async () => {setUser(localStorage.getItem('user') || ''); setNotifications(await getAllNotificationsByUserId(localStorage.getItem('user') || ''))};
 
     getNotifications();
-  }, []);
+  }, [isOpen]);
 
   const handleToggle = async (id: number, hasNotification: boolean) => {
     setNotifications((prev) =>
@@ -27,9 +26,9 @@ export const NotificationSettings: FC = () => {
       ); 
 
      if (!hasNotification) {
-        subscribeToNotification(currentUser!, id);
+        subscribeToNotification(user!, id);
      } else {
-        unsubscribeToNotification(currentUser!, id);
+        unsubscribeToNotification(user!, id);
      }
   };
 
