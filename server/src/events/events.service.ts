@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { DeletedLineEvent, UpdatedLineEvent } from "./types";
+import { DeletedLineEvent, UpdatedLineEvent } from "@Entities/LineEvent";
 import { ProducerService } from "src/producer/producer.service";
 import { appConfig } from "src/appConfig";
 

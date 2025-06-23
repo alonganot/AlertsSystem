@@ -1,7 +1,7 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { Kafka } from 'kafkajs';
 import { appConfig } from 'src/appConfig';
-import { LineEvent } from 'src/types';
+import { LineEvent } from '@Entities/LineEvent';
 import { WebsocketGateway } from 'src/websocket/websocket.gateway';
 import { convetLineEventToMessage } from './utils';
 

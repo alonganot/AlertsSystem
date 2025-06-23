@@ -1,4 +1,4 @@
-import { LineEvent } from "src/types";
+import { LineEvent } from "@Entities/LineEvent"
 
 export const convetLineEventToMessage = (event: LineEvent) => {
     const action = event.status === 'DELETED' ? 'נמחק' :

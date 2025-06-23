@@ -1,7 +1,7 @@
 import { Injectable, OnModuleDestroy, OnModuleInit } from "@nestjs/common";
 import { Kafka, Producer } from "kafkajs";
 import { appConfig } from "src/appConfig";
-import { LineEvent } from "src/events/types";
+import { LineEvent } from "@Entities/LineEvent";
 
 @Injectable()
 export class ProducerService implements OnModuleInit, OnModuleDestroy {

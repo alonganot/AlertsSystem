@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Post } from "@nestjs/common";
-import { DeletedLineEvent, UpdatedLineEvent } from "./types";
+import { DeletedLineEvent, UpdatedLineEvent } from "@Entities/LineEvent";
 import { EventsService } from "./events.service";
 
 @Controller("events")

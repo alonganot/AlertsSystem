@@ -2,6 +2,7 @@ export interface LineEvent {
     id: string
     status: 'DELETED' | 'CURRENT' | 'EXPIRED'
     userId: string
+    date: Date
 }
 
 export interface DeletedLineEvent extends LineEvent {
