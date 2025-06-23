@@ -77,7 +77,6 @@ export const NotificationSettings: FC = () => {
             </li>
           ))}
         </ul>
-
       </div>}
     </>
   );
