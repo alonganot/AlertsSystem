@@ -1,12 +1,9 @@
 import { useEffect, useState, type FC } from "react";
-import { useNotifications } from "../context/NotificationsContext";
-
-const BACKEND_URL = 'localhost:3000';
+import { sendEvent } from "../api/Events";
 
 const events = ["קו נכנס לתוקף", "קו יצא מתוקף", "קו נמחק"];
 
 export const EventSender: FC = () => {
-    const { addNotification } = useNotifications()
     const [selectedEvent, setSelectedEvent] = useState<string>(events[0]);    
 
     useEffect(() => {
@@ -15,46 +12,12 @@ export const EventSender: FC = () => {
         }
     }, []);
 
-    const sendNotification = () => {
-        const date = new Intl.DateTimeFormat('en-GB', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: false,
-        }).format(new Date())
-
-        addNotification({ message: selectedEvent, date })
-        if (Notification.permission === "granted") {
-            new Notification(selectedEvent, {
-                icon: "/map-icon.png", 
-            });
-        }
-    };
-    
-    const sendEvent = async () => {
-        sendNotification();
-
-        try {
-            await fetch(`${BACKEND_URL}/notifications/subscribe`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ selectedEvent }),
-            });
-        } catch (error: any) {
-            console.log(`Error: ${error.message}`);
-        }
-    };
-
     return (
-       <div style={{ display: "flex", flexDirection: "row-reverse", gap: "2rem", alignItems: "center", position: "absolute", right: "35%", top: "40%" }}>
+       <div style={{ display: "flex", flexDirection: "row-reverse", gap: "2rem", alignItems: "center" }}>
             <h2>:בחר אירוע</h2>
             <div>
                 <button
-                    onClick={sendEvent}
+                    onClick={() => sendEvent(selectedEvent)}
                     style={{
                         padding: "0.5rem 1rem",
                         height: "2.5rem",
