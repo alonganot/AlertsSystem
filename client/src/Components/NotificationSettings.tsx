@@ -1,5 +1,6 @@
 import { useEffect, useState, type FC } from 'react';
 import { getAllNotificationsByUserId, subscribeToNotification, unsubscribeToNotification } from '../api/Notificitions';
+import styled from 'styled-components';
 
 export type Notification = {
   id: number;
@@ -7,17 +8,38 @@ export type Notification = {
   hasNotification: boolean;
 };
 
-const currentUser = localStorage.getItem('user');
+const Popup = styled('div')({
+  position: "absolute",
+  left: "1rem",
+  top: "3.5rem",
+  background: "white",
+  color: "black",
+  width: "16rem",
+  borderRadius: "0.5rem",
+  boxShadow: "0 2px 10px rgba(0,0,0,0.15)",
+  padding: "0.5rem",
+  zIndex: 10,
+});
+
+const SettingList = styled('ul')({
+  listStyle: "none",
+  padding: 0,
+  margin: 0,
+  maxHeight: "16rem",
+  overflowY: "auto",
+});
+
+const getUser = () => {const { user } = JSON.parse(localStorage.getItem('userData')!); return user};
 
 export const NotificationSettings: FC = () => {
   const [isOpen, setIsOpen] = useState(false); 
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
   useEffect(() => {
-    const getNotifications = async () => setNotifications(await getAllNotificationsByUserId(currentUser!));
+    const getNotifications = async () => setNotifications(await getAllNotificationsByUserId(getUser() || ''));
 
     getNotifications();
-  }, []);
+  }, [isOpen]);
 
   const handleToggle = async (id: number, hasNotification: boolean) => {
     setNotifications((prev) =>
@@ -27,30 +49,19 @@ export const NotificationSettings: FC = () => {
       ); 
 
      if (!hasNotification) {
-        subscribeToNotification(currentUser!, id);
+        subscribeToNotification(getUser(), id);
      } else {
-        unsubscribeToNotification(currentUser!, id);
+        unsubscribeToNotification(getUser(), id);
      }
   };
 
   return (
    <>
-      <img src="settings.png" width={30} onClick={() => setIsOpen((prev) => !prev)}></img>
+      <img src="settings.png" width={30} onClick={() => setIsOpen((prev) => !prev)} style={{cursor: 'pointer'}}></img>
 
-      {isOpen && <div style={{
-            position: "absolute",
-            left: "1rem",
-            top: "3.5rem",
-            background: "white",
-            color: "black",
-            width: "16rem",
-            borderRadius: "0.5rem",
-            boxShadow: "0 2px 10px rgba(0,0,0,0.15)",
-            padding: "0.5rem",
-            zIndex: 10,
-          }}>
+      {isOpen && <Popup>
         <h2>הגדרות</h2>
-        <ul
+        <SettingList
           style={{
             listStyle: "none",
             padding: 0,
@@ -62,11 +73,6 @@ export const NotificationSettings: FC = () => {
           {notifications.map((notification) => (
             <li
               key={notification.id}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                padding: "0.25rem 0",
-              }}
             >
               <span>{notification.description}</span>
               <input
@@ -76,8 +82,8 @@ export const NotificationSettings: FC = () => {
               />
             </li>
           ))}
-        </ul>
-      </div>}
+        </SettingList>
+      </Popup>}
     </>
   );
 };

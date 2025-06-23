@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 export interface Notification {
   message: string;
@@ -18,6 +18,10 @@ export const NotificationsProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const addNotification = (notification: Notification) => setNotifications((prev) => [...prev, notification]);
   const removeNotification = (index: number) => setNotifications((prev) => prev.filter((_, i) => i !== index));
+
+  useEffect(() => {
+    document.title = `מודל התראות${notifications.length > 0 ? ` (${notifications.length})` : ''}`;
+  }, [notifications.length]);
 
   return (
     <NotificationsContext.Provider value={{ notifications, addNotification, removeNotification }}>
