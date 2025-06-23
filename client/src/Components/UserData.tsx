@@ -1,6 +1,7 @@
 import { useState, useEffect, type FC } from "react";
 import styled from "styled-components";
 import { pikuds } from "../consts";
+import type { User } from "@Entities/User";
 
 const Popup = styled('div')({
   position: "absolute",
@@ -14,11 +15,6 @@ const Popup = styled('div')({
   padding: "0.5rem",
   zIndex: 10,
 });
-
-type User = {
-  user: string;
-  pikud: string;
-};
 
 const UserData: FC = () => {
   const [userData, setUserData] = useState<User>();
