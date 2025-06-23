@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Post } from "@nestjs/common";
 import { DeletedLineEvent, UpdatedLineEvent } from "./types";
-import { EventsService } from "./events,service";
+import { EventsService } from "./events.service";
 
 @Controller("events")
 export class EventsController {
