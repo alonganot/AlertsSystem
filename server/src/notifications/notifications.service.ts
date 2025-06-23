@@ -6,13 +6,7 @@ import { NotificationWithUserFlag, UserNotification } from "./types";
 @Injectable()
 export class NotificationsService {
   constructor() {}
- // constructor(private readonly kafkaService: KafkaProducer) {}
-
-  subscribeEvent() {
-    return '';
-    //return this.kafkaService.send("gf", {});
-  }
-
+  
   async getAllNotifications(userId: string) {
     return executeQuery<NotificationWithUserFlag[]>(`
       SELECT 
