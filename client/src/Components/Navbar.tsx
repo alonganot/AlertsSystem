@@ -1,7 +1,10 @@
 import styled from "styled-components";
+import { useEffect, useState } from "react";
 import { NotificationSettings } from "./NotificationSettings";
 import { NotificationDropdown } from "./NotificationsDropdown";
 import UserData from "./UserData";
+import { useSocketEvent } from "src/context/SocketContext";
+import type { Notification } from "src/types/Notification";
 
 const Nav = styled('nav')({
   position: "fixed",
@@ -21,15 +24,40 @@ const Nav = styled('nav')({
 });
 
 const Navbar: React.FC = () => {
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  
+  const addNotification = (notification: Notification) => setNotifications((prev) => [...prev, notification]);
+  const removeNotification = (index: number) => setNotifications((prev) => prev.filter((_, i) => i !== index));
+  
+  useEffect(() => {
+      document.title = `מודל התראות${notifications.length > 0 ? ` (${notifications.length})` : ''}`;
+  }, [notifications.length]);
+
+  useSocketEvent('kafka-message', (message) => {
+    const date = new Intl.DateTimeFormat('en-GB', { //this should come from the message
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    }).format(new Date())
+          
+    addNotification({ message, date })
+   
+    if (Notification.permission === "granted") {
+        new Notification(message);
+    }
+  })
+
   return (
     <Nav>
       <h1 style={{ fontSize: "1.25rem", fontWeight: "bold", margin: 0, paddingRight: '40px'}}>
         מודל התראות
       </h1>
-
       <div style={{ display: "flex", alignItems: "center", gap: "1rem", direction: "ltr" }}>
         <NotificationSettings />
-        <NotificationDropdown />
+        <NotificationDropdown notifications={notifications} removeNotification={removeNotification} />
         <UserData/>
       </div>
     </Nav>

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useNotifications } from "../context/NotificationsContext";
 import styled from "styled-components";
+import type { Notification } from 'src/types/Notification';
 
 const AlertsNum = styled('span')({
   position: "absolute",
@@ -56,8 +56,12 @@ const Alert = styled('li')({
   textAlign: 'right'
 });
 
-const NotificationDropdown: React.FC = () => {
-  const { notifications, removeNotification } = useNotifications();
+interface NotificationsDropdownProps {
+  notifications: Notification[]
+  removeNotification: (index: number) => void
+}
+
+const NotificationDropdown: React.FC<NotificationsDropdownProps> = ({notifications, removeNotification}) => {
   const [open, setOpen] = useState(false);
 
   return (
