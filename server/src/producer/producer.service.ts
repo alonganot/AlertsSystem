@@ -7,6 +7,8 @@ import { LineEvent } from "@Entities/LineEvent";
 export class ProducerService implements OnModuleInit, OnModuleDestroy {
   private kafka: Kafka
   private producer: Producer
+  private isProducerConneted: boolean
+  private reconnectInterval: NodeJS.Timeout | null = null;
 
   constructor() {
     this.kafka = new Kafka({
@@ -16,26 +18,61 @@ export class ProducerService implements OnModuleInit, OnModuleDestroy {
 
     this.producer = this.kafka.producer()
   }
+
+  private async connectProducer() {
+    try {
+      await this.producer.connect()
+      this.isProducerConneted = true
+      console.log('✅ Kafka Producer Connected')
+
+      if (this.reconnectInterval) {
+        clearInterval(this.reconnectInterval)
+        this.reconnectInterval = null
+      }
+    } catch (_) {
+      this.isProducerConneted = false
+      console.error('❌ Kafka Producer connection failed')
+
+      if (!this.reconnectInterval) {
+        this.reconnectInterval = setInterval(() => {
+          console.log('🔁 Retrying Kafka connection...')
+          this.connectProducer()
+        }, 60000);
+      }
+    }
+  }
   
   async onModuleInit() {
-    await this.producer.connect()
-    console.log('Kafka Producer Connected');
+    this.connectProducer()
   }
 
   async onModuleDestroy() {
-    await this.producer.disconnect()
-    console.log('Kafka Producer Disconnected')
+    if (this.isProducerConneted) {
+      await this.producer.disconnect()
+      console.log('Kafka Producer Disconnected')
+    }
+    if (this.reconnectInterval) {
+      clearInterval(this.reconnectInterval)
+    }
   }
 
   async sendMessage(topic: string, message: LineEvent) {
-    await this.producer.send({
-      topic,
-      messages: [
-        {
-          key: message.status,
-          value: JSON.stringify(message)
-        }
-      ]
-    })
+    if (this.isProducerConneted) {
+      try {
+        await this.producer.send({
+          topic,
+          messages: [
+            {
+              key: message.status,
+              value: JSON.stringify(message)
+            }
+          ]
+        })
+      } catch (_) {
+        console.error('❌ Failed to send Kafka message')
+        this.isProducerConneted = false
+        this.connectProducer()
+      }
+    }
   }
 }
