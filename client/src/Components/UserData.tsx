@@ -70,7 +70,7 @@ const UserData: FC = () => {
                       if (prevUser) {
                         return { ...prevUser, pikud: e.target.value };
                       }
-                      return { user: "", pikud: e.target.value }; // Initialize if `prevUser` is undefined
+                      return { user: "", pikud: e.target.value }; 
                     })
                   }
                   required
