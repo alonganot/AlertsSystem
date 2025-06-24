@@ -1,33 +1,27 @@
-import { DeletedLineEvent, UpdatedLineEvent } from "@Entities/LineEvent";
+import { DeletedLineEvent, LineEvent, UpdatedLineEvent } from "@Entities/LineEvent";
 import { Type } from "class-transformer";
 import { IsDate, IsIn, IsString } from "class-validator";
 
-export class UpdatedLineEventDto implements UpdatedLineEvent {
+class LineEventDto implements LineEvent {
     @IsString()
     readonly id: string;
 
     @IsString()
     readonly userId: string;
 
-    @IsIn(['CURRENT', 'EXPIRED'])
-    readonly status: "CURRENT" | "EXPIRED";
-
-    @Type(() => Date)
-    @IsDate()
-    date: Date;
-}
-
-export class DeletedLineEventDto implements DeletedLineEvent {
-    @IsString()
-    readonly id: string;
-
-    @IsString()
-    readonly userId: string;
-
-    @IsIn(['DELETED'])
-    readonly status: "DELETED";
+    readonly status: "CURRENT" | "EXPIRED" | "DELETED";
 
     @Type(() => Date)
     @IsDate()
     readonly date: Date;
+}
+
+export class UpdatedLineEventDto extends LineEventDto implements UpdatedLineEvent {
+    @IsIn(['CURRENT', 'EXPIRED'])
+    readonly status: "CURRENT" | "EXPIRED";
+}
+
+export class DeletedLineEventDto extends LineEventDto implements DeletedLineEvent {
+    @IsIn(['DELETED'])
+    readonly status: "DELETED";
 }
