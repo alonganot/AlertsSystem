@@ -1,3 +1,4 @@
+import { User } from '@Entities/User';
 import {
   WebSocketGateway,
   WebSocketServer,
@@ -42,19 +43,11 @@ export class WebsocketGateway implements OnGatewayInit, OnGatewayConnection, OnG
         }
     }
 
-    sendMessageToClients(message: string, clientIds?: string[]) {       
-        if (clientIds) {
-            clientIds.forEach((clientId) => {
-            const clientSocket = this.clients.get(clientId)
-            
-            if (clientSocket) {
-                clientSocket.emit('kafka-message', message)
-            } else {
-                console.log(`Client ${clientId} not connected`)
-            }
-        })
-        } else {
-            this.server.emit('kafka-message', message)
-        }
+    sendMessageToClients(
+        message: string, 
+        filterFunction: (client: User) => boolean
+    ) {
+        const filteredClients = [...this.clients.entries()]
+            .filter(([a, socket]) => filterFunction(a))?.[0];
     }
 }

@@ -3,7 +3,8 @@ import { Kafka } from 'kafkajs';
 import { appConfig } from 'src/appConfig';
 import { LineEvent } from '@Entities/LineEvent';
 import { WebsocketGateway } from 'src/websocket/websocket.gateway';
-import { convetLineEventToMessage } from './utils';
+import { convetLineEventToMessage, getfilterClientsFunction } from './utils';
+import { NotificationTypesService } from 'src/notificationTypes/notificationTypes.Service';
 
 @Injectable()
 export class ConsumerService implements OnModuleInit {
@@ -12,7 +13,8 @@ export class ConsumerService implements OnModuleInit {
         brokers: [appConfig.KAFKA_BROKERS],
     })
     private readonly consumer = this.kafka.consumer({ groupId: 'test-group'})
-    private websocketGateway: WebsocketGateway;
+    private websocketGateway: WebsocketGateway
+    private notificationTypeService: NotificationTypesService
     
     async onModuleInit() {
         await this.consumer.connect()
@@ -25,9 +27,15 @@ export class ConsumerService implements OnModuleInit {
           
                 const data = message.value?.toString()
                 
-                if (data) {
+                if (data && message.key) {
+                    const notificationTypeId = Number(message.key.toString)
                     const lineEvent = JSON.parse(data) as LineEvent
-                    this.websocketGateway?.sendMessageToClients(convetLineEventToMessage(lineEvent))
+                    const notificationType = await this.notificationTypeService.getNotificationTypeById(notificationTypeId)
+
+                    this.websocketGateway?.sendMessageToClients(
+                        convetLineEventToMessage(lineEvent, notificationType),
+                        getfilterClientsFunction(lineEvent, notificationType)
+                    )
                 }
             }
         })
