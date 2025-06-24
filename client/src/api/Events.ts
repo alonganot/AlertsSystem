@@ -7,7 +7,7 @@ export const sendEvent = async (event: string, pikud: string) => {
         const lineEvent: LineEvent = {
             id: 'L123', 
             status,            
-            pikud: pikud,  
+            pikud,  
             userId: (JSON.parse(localStorage.getItem("userData")!) as User).user ?? 'לא ידוע',
             date: new Date
         }
