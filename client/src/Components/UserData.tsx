@@ -2,8 +2,9 @@ import { useState, useEffect, type FC } from "react";
 import styled from "styled-components";
 import { pikuds } from "../consts";
 import type { User } from "@Entities/User";
+import { addUser } from "src/api/Users";
 
-const Popup = styled('div')({
+const Popup = styled("div")({
   position: "absolute",
   left: "1rem",
   top: "3.5rem",
@@ -28,17 +29,26 @@ const UserData: FC = () => {
     }
   }, []);
 
-  const handleSubmit = () => {
-    localStorage.setItem("userData", JSON.stringify(userData));
+  const handleSubmit = async () => {
+    if (userData) {
+      localStorage.setItem("userData", JSON.stringify(userData));
+      await addUser(userData?.user);
 
-    setShowPopup(false);
+      setShowPopup(false);
+    }
   };
 
   const togglePopup = () => setShowPopup(!showPopup);
 
   return (
     <div dir="rtl">
-      <img width={30} src={`account.png`} alt="Account" onClick={togglePopup} style={{cursor: 'pointer'}}/>
+      <img
+        width={30}
+        src={`account.png`}
+        alt="Account"
+        onClick={togglePopup}
+        style={{ cursor: "pointer" }}
+      />
 
       {showPopup && (
         <Popup>
@@ -51,12 +61,14 @@ const UserData: FC = () => {
                   type="text"
                   id="username"
                   value={userData?.user}
-                  onChange={(e) => setUserData((prevUser) => {
+                  onChange={(e) =>
+                    setUserData((prevUser) => {
                       if (prevUser) {
                         return { ...prevUser, user: e.target.value };
                       }
                       return { user: e.target.value, pikud: "" };
-                    })}
+                    })
+                  }
                   required
                 />
               </div>
@@ -66,11 +78,12 @@ const UserData: FC = () => {
                 <select
                   id="location"
                   value={userData?.pikud}
-                  onChange={(e) => setUserData((prevUser) => {
+                  onChange={(e) =>
+                    setUserData((prevUser) => {
                       if (prevUser) {
                         return { ...prevUser, pikud: e.target.value };
                       }
-                      return { user: "", pikud: e.target.value }; 
+                      return { user: "", pikud: e.target.value };
                     })
                   }
                   required
@@ -92,7 +105,5 @@ const UserData: FC = () => {
     </div>
   );
 };
-
-
 
 export default UserData;
