@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import { useNotifications } from "./context/NotificationsContext"
 import { io, Socket } from "socket.io-client";
 import { appConfig } from "./appConfig";
+import { pikuds } from "./consts";
+import type { User } from "@Entities/User";
 
 const WebSocketListener: React.FC = () => {
   const { addNotification } = useNotifications();
@@ -26,10 +28,9 @@ const WebSocketListener: React.FC = () => {
     };
 
     useEffect(() => {
-        if (!localStorage.getItem("user")) {
-            localStorage.setItem("user", "defaultuser")
-        }
-        const socket: Socket = io(`${appConfig.WS_SERVER_URL}?clientId=${localStorage.getItem("user")}`, {
+        const { user }: User = JSON.parse(localStorage.getItem("userData") ?? JSON.stringify({user: "defaultuser", pikud: pikuds[0]}))
+
+        const socket: Socket = io(`${appConfig.WS_SERVER_URL}?clientId=${user}`, { // need to add pikud here
         transports: ["websocket"],
         });
 

@@ -1,19 +1,18 @@
 import { Body, Controller, Delete, Post } from "@nestjs/common";
-import { DeletedLineEvent, UpdatedLineEvent } from "@Entities/LineEvent";
 import { EventsService } from "./events.service";
+import { DeletedLineEventDto, UpdatedLineEventDto } from "src/dto/LineEventDto";
 
 @Controller("events")
 export class EventsController {
     constructor(private readonly eventsService: EventsService){}
 
-    //for now the body type is set but it lets the client to send unvalid types. i will take care of this
     @Post('update')
-    async updateLine (@Body() body: UpdatedLineEvent) {
+    async updateLine (@Body() body: UpdatedLineEventDto) {
         await this.eventsService.updateLine(body)
     }
 
     @Delete('delete')
-    async delete (@Body() body: DeletedLineEvent) {
+    async delete (@Body() body: DeletedLineEventDto) {
         this.eventsService.deleteLine(body)
     }
 }
