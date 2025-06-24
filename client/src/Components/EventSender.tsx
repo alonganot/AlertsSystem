@@ -1,4 +1,4 @@
-import { useEffect, useState, type FC } from "react";
+import { useState, type FC } from "react";
 import { sendEvent } from "../api/Events";
 import styled from "styled-components";
 import { pikuds } from "../consts";
@@ -21,12 +21,6 @@ const EventSelecter = styled('select')({
 export const EventSender: FC = () => {
     const [selectedEvent, setSelectedEvent] = useState<string>(events[0]);    
     const [selectedPikud, setSelectedPikud] = useState<string>(pikuds[0]);    
-
-    useEffect(() => {
-        if ("Notification" in window && Notification.permission !== "granted") {
-            Notification.requestPermission();
-        }
-    }, []);
 
     return (
        <div style={{ display: "flex", flexDirection: "row-reverse", gap: "2rem", alignItems: "center" }}>

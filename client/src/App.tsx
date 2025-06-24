@@ -1,8 +1,15 @@
+import { useEffect } from 'react';
 import { EventSender } from './Components/EventSender'
 import Navbar from './Components/Navbar'
 import { SocketProvider } from './context/SocketContext'
 
 function App() {
+    useEffect(() => {
+        if ("Notification" in window && Notification.permission !== "granted") {
+            Notification.requestPermission();
+        }
+    }, []);
+
   return (
     <SocketProvider>
       <Navbar />
