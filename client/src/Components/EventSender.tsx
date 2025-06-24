@@ -33,7 +33,7 @@ export const EventSender: FC = () => {
             <h2>:בחר אירוע</h2>
             <div>
                 <EventButton
-                    onClick={() => sendEvent(selectedEvent)}
+                    onClick={() => sendEvent(selectedEvent, selectedPikud)}
                 >
                     שלח אירוע
                 </EventButton>

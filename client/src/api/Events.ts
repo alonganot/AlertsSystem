@@ -2,11 +2,12 @@ import type { User } from "@Entities/User";
 import { appConfig } from "../appConfig";
 import type { LineEvent } from '@Entities/LineEvent'
 
-export const sendEvent = async (event: string) => {
+export const sendEvent = async (event: string, pikud: string) => {
         const status = event === 'קו נכנס לתוקף' ? 'CURRENT' : event === 'קו יצא מתוקף' ? "EXPIRED" : "DELETED" // This should be smarter
         const lineEvent: LineEvent = {
             id: 'L123', 
-            status, 
+            status,            
+            pikud,  
             userId: (JSON.parse(localStorage.getItem("userData")!) as User).user ?? 'לא ידוע',
             date: new Date
         }

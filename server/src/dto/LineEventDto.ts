@@ -11,6 +11,9 @@ class LineEventDto implements LineEvent {
 
     readonly status: "CURRENT" | "EXPIRED" | "DELETED";
 
+    @IsString()
+    readonly pikud: string;
+
     @Type(() => Date)
     @IsDate()
     readonly date: Date;
