@@ -5,11 +5,6 @@ import { NotificationsService } from "./notifications.service";
 export class NotificationsController {
   constructor(private readonly notificationsService: NotificationsService) {}
 
-  @Post("subscribe")
-  subscribe(@Body() sub: any, @Req() req) {
-    return this.notificationsService.subscribeEvent();
-  }
-
   @Get()
   async getAllNotifications(
     @Query('user_id') userId: string,

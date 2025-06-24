@@ -12,8 +12,8 @@ export const sendEvent = async (event: string) => {
         }
         
         try {
-            await fetch(`${appConfig.SERVER_URL}/events/update`, {
-                method: "POST",
+            await fetch(`${appConfig.SERVER_URL}/events/${status === 'DELETED' ? 'delete' : 'update'}`, {
+                method: status === 'DELETED' ? "DELETE" :"POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
