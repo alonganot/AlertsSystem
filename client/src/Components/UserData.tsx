@@ -30,11 +30,15 @@ const UserData: FC = () => {
   }, []);
 
   const handleSubmit = async () => {
-    if (userData) {
-      localStorage.setItem("userData", JSON.stringify(userData));
-      await addUser(userData?.user);
+    try {
+      if (userData) {
+        await addUser(userData.user);
+        localStorage.setItem("userData", JSON.stringify(userData));
 
-      setShowPopup(false);
+        setShowPopup(false);
+      }
+    } catch (_) {
+      console.log("couldn't add user");
     }
   };
 
