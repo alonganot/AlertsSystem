@@ -22,11 +22,11 @@ export class NotificationsService {
 
   async addUserNotification(
     userId: string,
-    notificationId: number,
+    notificationTypeId: number,
   ): Promise<UserNotification[]> {
     await executeQuery(
-      'INSERT INTO user_preference.user_notifications (user_id, notification_id) VALUES ($1, $2)',
-      [userId, notificationId],
+      'INSERT INTO user_preference.user_notifications_new(user_id, notification_id) VALUES ($1, $2)',
+      [userId, notificationTypeId],
     );
 
     // return all user_notifications for this user, optional
@@ -38,11 +38,11 @@ export class NotificationsService {
 
   async removeUserNotification(
     userId: string,
-    notificationId: number,
+    notificationTypeId: number,
   ): Promise<UserNotification[]> {
     await executeQuery(
-      'DELETE FROM user_preference.user_notifications WHERE user_id = $1 AND notification_id = $2',
-      [userId, notificationId],
+      'DELETE FROM user_preference.user_notifications_new WHERE user_id = $1 AND notification_id = $2',
+      [userId, notificationTypeId],
     );
 
     // return all user_notifications for this user, optional

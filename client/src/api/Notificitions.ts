@@ -11,20 +11,20 @@ export const getAllNotificationsByUserId = async (userId: string): Promise<Notif
   return response.json(); 
 }
 
-export const subscribeToNotification = async (userId: string, notificationId: number): Promise<Notification[]> => {
+export const subscribeToNotification = async (userId: string, notificationTypeId: number): Promise<Notification[]> => {
   const response = await fetch(`${appConfig.SERVER_URL}/notifications/user-notification`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify({ userId: userId, notificationId: notificationId })
+    body: JSON.stringify({ userId: userId, notificationId: notificationTypeId })
   });
 
   return response.json();
 }
 
-export const unsubscribeToNotification = async (userId: string, notificationId: number): Promise<Notification[]> => {
-  const response = await fetch(`${appConfig.SERVER_URL}/notifications/user-notification?user_id=${userId}&notification_id=${notificationId}`, {
+export const unsubscribeToNotification = async (userId: string, notificationTypeId: number): Promise<Notification[]> => {
+  const response = await fetch(`${appConfig.SERVER_URL}/notifications/user-notification?user_id=${userId}&notification_id=${notificationTypeId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json"
