@@ -1,6 +1,7 @@
-import { useState } from "react";
-import { useNotifications } from "../context/NotificationsContext";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
+import type { Notification } from 'src/types/Notification';
+import { useSocketEvent } from "src/context/SocketContext";
 
 const AlertsNum = styled('span')({
   position: "absolute",
@@ -57,8 +58,32 @@ const Alert = styled('li')({
 });
 
 const NotificationDropdown: React.FC = () => {
-  const { notifications, removeNotification } = useNotifications();
   const [open, setOpen] = useState(false);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  
+  const addNotification = (notification: Notification) => setNotifications((prev) => [...prev, notification]);
+  const removeNotification = (index: number) => setNotifications((prev) => prev.filter((_, i) => i !== index));
+  
+  useEffect(() => {
+      document.title = `מודל התראות${notifications.length > 0 ? ` (${notifications.length})` : ''}`;
+  }, [notifications.length]);
+
+  useSocketEvent('kafka-message', (message) => {
+    const date = new Intl.DateTimeFormat('en-GB', { //this should come from the message
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    }).format(new Date())
+          
+    addNotification({ message, date })
+   
+    if (Notification.permission === "granted") {
+        new Notification(message);
+    }
+  })
 
   return (
     <div style={{ position: "relative", cursor: "pointer" }}>
@@ -82,7 +107,7 @@ const NotificationDropdown: React.FC = () => {
                   { notifications.map((notification, index) => (
                     <Alert
                     key={index}
-                    title="Click to dismiss"
+                    title="לחצו להסרה"
                     onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#dbeafe")}
                     onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#eff6ff")}
                     onClick={() => removeNotification(index)}

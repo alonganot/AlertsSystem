@@ -26,7 +26,6 @@ const Navbar: React.FC = () => {
       <h1 style={{ fontSize: "1.25rem", fontWeight: "bold", margin: 0, paddingRight: '40px'}}>
         מודל התראות
       </h1>
-
       <div style={{ display: "flex", alignItems: "center", gap: "1rem", direction: "ltr" }}>
         <NotificationSettings />
         <NotificationDropdown />

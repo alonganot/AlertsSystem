@@ -1,12 +1,7 @@
 import { useEffect, useState, type FC } from 'react';
 import { getAllNotificationsByUserId, subscribeToNotification, unsubscribeToNotification } from '../api/Notificitions';
 import styled from 'styled-components';
-
-export type Notification = {
-  id: number;
-  description: string;
-  hasNotification: boolean;
-};
+import type { NotificationData } from '../types/Notification';
 
 const Popup = styled('div')({
   position: "absolute",
@@ -33,7 +28,7 @@ const getUser = () => {const { user } = JSON.parse(localStorage.getItem('userDat
 
 export const NotificationSettings: FC = () => {
   const [isOpen, setIsOpen] = useState(false); 
-  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [notifications, setNotifications] = useState<NotificationData[]>([]);
 
   useEffect(() => {
     const getNotifications = async () => setNotifications(await getAllNotificationsByUserId(getUser() || ''));
